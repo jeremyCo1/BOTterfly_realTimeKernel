@@ -69,8 +69,6 @@ uint8_t RGB_Init(RGB_struct* rgbSensor){
 	HAL_Delay(200);
 	HAL_GPIO_WritePin(rgbSensor->OutputEnable_GPIOx, rgbSensor->OutputEnable_GPIO_Pin, GPIO_PIN_RESET);
 
-	//HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_1);
-
 	return 0;
 }
 
@@ -133,6 +131,42 @@ uint8_t RGB_SetOFscaling(RGB_struct* rgbSensor, uint8_t scale){
 	return status;
 }
 
+
+uint8_t RGB_IsTheFloorRed(RGB_struct* rgbSensor){
+	uint8_t status = RGB_ERROR_NONE;
+
+	rgbSensor->it.difference = rgbSensor->it.icVal2 - rgbSensor->it.icVal1;
+	float refClock = RGB_APBCLOCK/(RGB_PRESCALER);
+	rgbSensor->it.frequency = refClock/rgbSensor->it.difference;
+
+	switch(rgbSensor->it.colorFilter)
+	{
+	case RGB_RED:
+		rgbSensor->red = (uint16_t)rgbSensor->it.frequency;
+		rgbSensor->it.colorFilter = RGB_GREEN;
+		RGB_SetFilter(rgbSensor, rgbSensor->it.colorFilter);
+		break;
+	case RGB_GREEN:
+		rgbSensor->green = (uint16_t)rgbSensor->it.frequency;
+		rgbSensor->it.colorFilter = RGB_BLUE;
+		RGB_SetFilter(rgbSensor, rgbSensor->it.colorFilter);
+		break;
+	case RGB_BLUE:
+		rgbSensor->blue = (uint16_t)rgbSensor->it.frequency;
+		rgbSensor->it.colorFilter = RGB_RED;
+		RGB_SetFilter(rgbSensor, rgbSensor->it.colorFilter);
+		break;
+	default:
+		printf("RGB - Error setFilter\r\n");
+	}
+	if((rgbSensor->red >= (1.5*rgbSensor->green)) & (rgbSensor->red >= (1.5*rgbSensor->blue))){
+		rgbSensor->isFloorRed = 1;
+	}else{
+		rgbSensor->isFloorRed = 0;
+	}
+
+	return status;
+}
 
 
 

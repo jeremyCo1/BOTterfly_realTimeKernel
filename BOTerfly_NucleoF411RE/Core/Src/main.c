@@ -54,10 +54,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-// Les variables seront en int plus ou moins grands en fonction de l'intensité de la lumière et la quantité de rouge
-int Cam_redL, Cam_redC, Cam_redR, Cam_lightL, Cam_lightC, Cam_lightR; // Rouge Gauche milieu Droite / Lumière Gauche Milieu Droite
-/*TOF*/
-int Ph_angle; // Valeur comprise entre -100 et 100 sans unité pour l'orientation du robot en fonction de la source de lumière. Les valeurs extrèmes correspondent à l'angle des photodiodes de gauche et de droite
 
 /* USER CODE END PV */
 
@@ -82,6 +78,9 @@ int function(int argc, char ** argv) {
 	return 0;
 }
 
+/*
+ * Cette tâche sert pas à grand chose non ?
+ */
 void vTaskShell(void * p)
 {
 	Shell_Init();
@@ -112,24 +111,7 @@ void vTaskControl(void * p)
 		vTaskDelay(portTICK_PERIOD_MS*200);
 	}
 }
-void vTaskCamera(void * p)
-{
-	// On la met de côté pour le moment
-	// Capture une image
-	// Analyse l'image
-	// Remplie les variables globales :
-	// RG, RM, RD, LG, LM, LD // Les variables seront en int plus ou moins grands en fonction de l'intensité de la lumière et la quantité de rouge
-	while(1){
-		vTaskDelay(1);
-	}
-}
-void vTaskIMU(void * p)
-{
-	// On la met de côté pour le moment
-	while(1){
-		vTaskDelay(1);
-	}
-}
+
 
 /*
  * Réalise les mesures de couleur
@@ -146,41 +128,9 @@ void vTaskCouleur(void * p)
 
 	RGB_Init(&RGB_Sensor);
 
-	float refClock;
-
 	while(1){
 		if(RGB_Sensor.it.flag){
-
-			RGB_Sensor.it.difference = RGB_Sensor.it.icVal2 - RGB_Sensor.it.icVal1;
-			refClock = RGB_APBCLOCK/(RGB_PRESCALER);
-			RGB_Sensor.it.frequency = refClock/RGB_Sensor.it.difference;
-
-			switch(RGB_Sensor.it.colorFilter)
-			{
-			case RGB_RED:
-				RGB_Sensor.red = (uint16_t)RGB_Sensor.it.frequency;
-				RGB_Sensor.it.colorFilter = RGB_GREEN;
-				RGB_SetFilter(&RGB_Sensor, RGB_Sensor.it.colorFilter);
-				break;
-			case RGB_GREEN:
-				RGB_Sensor.green = (uint16_t)RGB_Sensor.it.frequency;
-				RGB_Sensor.it.colorFilter = RGB_BLUE;
-				RGB_SetFilter(&RGB_Sensor, RGB_Sensor.it.colorFilter);
-				break;
-			case RGB_BLUE:
-				RGB_Sensor.blue = (uint16_t)RGB_Sensor.it.frequency;
-				RGB_Sensor.it.colorFilter = RGB_RED;
-				RGB_SetFilter(&RGB_Sensor, RGB_Sensor.it.colorFilter);
-				break;
-			default:
-				printf("RGB - Error setFilter\r\n");
-			}
-			if((RGB_Sensor.red >= (1.5*RGB_Sensor.green)) & (RGB_Sensor.red >= (1.5*RGB_Sensor.blue))){
-				RGB_Sensor.isFloorRed = 1;
-			}else{
-				RGB_Sensor.isFloorRed = 0;
-			}
-
+			RGB_IsTheFloorRed(&RGB_Sensor);
 			RGB_Sensor.it.flag = 0;
 		}
 		vTaskDelay(10);
@@ -291,14 +241,6 @@ int main(void)
 	{
 		printf("Task Control Creation error : Could not allocate required memory\r\n");
 	}
-	//	if (xTaskCreate(vTaskCamera, "Camera", STACK_SIZE, (void *)NULL, 8, &xHandle) == errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY)
-	//	{
-	//		printf("Task Camera Creation error : Could not allocate required memory\r\n");
-	//	}
-	//	if (xTaskCreate(vTaskIMU, "IMU", STACK_SIZE, (void *)NULL, 12, &xHandle) == errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY)
-	//	{
-	//		printf("Task IMU Creation error : Could not allocate required memory\r\n");
-	//	}
 	if (xTaskCreate(vTaskCouleur, "Couleur", STACK_SIZE, (void *)NULL, 20, &xHandle) == errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY)
 	{
 		printf("Task Couleur Creation error : Could not allocate required memory\r\n");
@@ -383,13 +325,12 @@ uint16_t icVal01 = 0;
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
-	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
+	if(htim->Instance == RGB_Sensor.Timer_Handle->Instance)
 	{
 		if(RGB_Sensor.it.isFirstCaptured == 0){
 			icVal01 = HAL_TIM_ReadCapturedValue(htim, RGB_Sensor.Timer_Channel);
 			RGB_Sensor.it.isFirstCaptured = 1;
-		}
-		else{
+		}else{
 			RGB_Sensor.it.icVal1 = icVal01;
 			RGB_Sensor.it.icVal2 = HAL_TIM_ReadCapturedValue(htim, RGB_Sensor.Timer_Channel);
 			RGB_Sensor.it.isFirstCaptured = 0;

@@ -108,6 +108,8 @@ uint8_t RGB_Init(RGB_struct* rgbSensor);
 uint8_t RGB_SetFilter(RGB_struct* rgbSensor, uint8_t color);
 uint8_t RGB_SetOFscaling(RGB_struct* rgbSensor, uint8_t scale);
 
+uint8_t RGB_IsTheFloorRed(RGB_struct* rgbSensor);
+
 
 /***************  EXAMPLE  ***************/
 
