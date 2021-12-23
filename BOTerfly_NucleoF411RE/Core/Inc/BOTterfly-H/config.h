@@ -12,7 +12,6 @@
 #include "rgb_sensor.h"
 
 /* TOF SENSORS */
-#define TOF_nbOfSensor 3
 
 struct VL53L0X_Dev_t TOF_Sensor[TOF_nbOfSensor];
 

@@ -68,7 +68,6 @@ typedef struct VL53L0X_Dev_t{
 
 	/*!< user specific field */
 
-	/***********************************/
 	I2C_HandleTypeDef *I2cHandle;
 
 	uint16_t rangeMillimeter;
@@ -83,7 +82,6 @@ typedef struct VL53L0X_Dev_t{
 	IRQn_Type EXTI_IRQn;
 
 	uint8_t I2cAddr;
-	/***********************************/
 
 	uint8_t   I2cDevAddr;
 	uint8_t   comms_type;

@@ -16,6 +16,8 @@
 #include "vl53l0x_platform.h"
 #include "vl53l0x_device.h"
 
+#define TOF_nbOfSensor 3
+
 // Example at the end of this file
 
 /* -------------- STRUCTURE -------------- */

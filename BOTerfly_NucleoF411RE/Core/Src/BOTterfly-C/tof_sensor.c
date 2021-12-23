@@ -6,7 +6,6 @@
  */
 
 #include "BOTterfly-H/tof_sensor.h"
-#include "BOTterfly-H/config.h"
 
 uint8_t TOF_Init_SetI2C(VL53L0X_Dev_t* device, I2C_HandleTypeDef *hi2c, uint8_t I2cAddr){
 	device->I2cHandle = hi2c;
@@ -172,29 +171,5 @@ uint8_t TOF_GetDeviceInfo(VL53L0X_Dev_t* myDevice, VL53L0X_DeviceInfo_t* deviceI
 
 	return 0;
 }
-
-VL53L0X_RangingMeasurementData_t VL53L0X_RangingMeasurementData;
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-	if(GPIO_Pin == TOF_Sensor[0].EXTI_GPIO_Pin){
-		uint32_t InterruptMask = 0;
-		VL53L0X_GetRangingMeasurementData(&TOF_Sensor[0], &VL53L0X_RangingMeasurementData);
-		TOF_Sensor[0].rangeMillimeter = VL53L0X_RangingMeasurementData.RangeMilliMeter;
-		VL53L0X_ClearInterruptMask(&TOF_Sensor[0], InterruptMask);
-	}else
-		if(GPIO_Pin == TOF_Sensor[1].EXTI_GPIO_Pin){
-			uint32_t InterruptMask = 0;
-			VL53L0X_GetRangingMeasurementData(&TOF_Sensor[1], &VL53L0X_RangingMeasurementData);
-			TOF_Sensor[1].rangeMillimeter = VL53L0X_RangingMeasurementData.RangeMilliMeter;
-			VL53L0X_ClearInterruptMask(&TOF_Sensor[1], InterruptMask);
-		}else
-			if(GPIO_Pin == TOF_Sensor[2].EXTI_GPIO_Pin){
-				uint32_t InterruptMask = 0;
-				VL53L0X_GetRangingMeasurementData(&TOF_Sensor[2], &VL53L0X_RangingMeasurementData);
-				TOF_Sensor[2].rangeMillimeter = VL53L0X_RangingMeasurementData.RangeMilliMeter;
-				VL53L0X_ClearInterruptMask(&TOF_Sensor[2], InterruptMask);
-			}
-}
-
 
 
