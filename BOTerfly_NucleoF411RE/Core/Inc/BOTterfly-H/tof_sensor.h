@@ -24,6 +24,8 @@
 
 //cf ->   vl53l0x_platform.h   <- file from the API
 //
+// voir struct it aussi
+//
 //typedef struct {
 //	I2C_HandleTypeDef *I2cHandle;
 //	uint8_t I2cAddr;
@@ -67,6 +69,8 @@ uint8_t TOF_SetDeviceAddr(VL53L0X_Dev_t* device, uint8_t new_addr);
 
 uint8_t TOF_GetDeviceInfo(VL53L0X_Dev_t* myDevice, VL53L0X_DeviceInfo_t* deviceInfo);
 
+// Useful to treat the interrupt
+uint8_t TOF_SetDistance_mm(VL53L0X_Dev_t* device);
 
 
 /* --------------  EXAMPLE  -------------- */

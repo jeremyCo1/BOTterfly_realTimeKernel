@@ -63,6 +63,10 @@ extern "C" {
  * @brief    Generic PAL device type that does link between API and platform abstraction layer
  *
  */
+typedef struct TOF_it_struct{
+	uint8_t flag;
+}TOF_it_struct;
+
 typedef struct VL53L0X_Dev_t{
 	VL53L0X_DevData_t Data;               /*!< embed ST Ewok Dev  data as "Data"*/
 
@@ -86,6 +90,9 @@ typedef struct VL53L0X_Dev_t{
 	uint8_t   I2cDevAddr;
 	uint8_t   comms_type;
 	uint16_t  comms_speed_khz;
+
+	// Useful to treat the IT
+	struct TOF_it_struct it;
 } VL53L0X_Dev_t;
 
 

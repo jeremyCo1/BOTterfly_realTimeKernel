@@ -1,0 +1,8 @@
+shell.c:43:6:Shell_Uart_Read	16	static
+shell.c:52:5:Shell_Uart_Write	16	static
+shell.c:58:6:Shell_Uart_Data_Ready	4	static
+shell.c:63:5:Shell_Help	24	static
+shell.c:81:6:Shell_Init	16	static
+shell.c:96:5:Shell_Add	24	static
+shell.c:110:5:Shell_Exec	64	static
+shell.c:145:5:Shell_Run	24	static

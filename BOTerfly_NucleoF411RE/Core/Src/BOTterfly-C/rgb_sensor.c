@@ -12,7 +12,7 @@ uint8_t RGB_Init_SetTimer(RGB_struct* rgbSensor, TIM_HandleTypeDef *htim, uint32
 	rgbSensor->Timer_Handle = htim;
 	rgbSensor->Timer_Channel = Channel;
 
-	HAL_TIM_IC_Start_IT(rgbSensor->Timer_Handle, rgbSensor->Timer_Channel);
+	//HAL_TIM_IC_Start_IT(rgbSensor->Timer_Handle, rgbSensor->Timer_Channel);
 	return 0;
 }
 

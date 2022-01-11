@@ -1,0 +1,12 @@
+photodiodes.c:30:9:Ph_Init	16	static
+photodiodes.c:43:9:Ph_GetMeasureSimple	16	static
+photodiodes.c:51:9:Ph_GetMeasure	16	static
+photodiodes.c:59:9:Ph_GetValues	24	static
+photodiodes.c:76:9:Ph_GetAverageN	48	static
+photodiodes.c:102:9:Ph_Treatment	104	static
+photodiodes.c:126:5:Ph_GetPhMaxValue	32	static
+photodiodes.c:143:5:Ph_GetBestAngle	40	static
+photodiodes.c:184:5:Ph_GetBestAngleAncien	40	static
+photodiodes.c:294:5:Ph_GetNorma	40	static
+photodiodes.c:314:5:Ph_GetPercentGood	24	static
+photodiodes.c:330:5:Ph_Print	32	static

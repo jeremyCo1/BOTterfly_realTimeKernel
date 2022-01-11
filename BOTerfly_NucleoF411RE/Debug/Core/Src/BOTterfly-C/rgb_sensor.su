@@ -1,0 +1,8 @@
+rgb_sensor.c:11:9:RGB_Init_SetTimer	24	static
+rgb_sensor.c:19:9:RGB_Init_SetParamGPIOs	24	static
+rgb_sensor.c:29:9:RGB_Init_SetOutFreqGPIOs	24	static
+rgb_sensor.c:39:9:RGB_Init_SetColorFilterGPIOs	24	static
+rgb_sensor.c:49:9:RGB_Init	16	static
+rgb_sensor.c:75:9:RGB_SetFilter	24	static
+rgb_sensor.c:105:9:RGB_SetOFscaling	24	static
+rgb_sensor.c:135:9:RGB_IsTheFloorRed	40	static

@@ -10,6 +10,7 @@
 
 #include "tof_sensor.h"
 #include "rgb_sensor.h"
+#include "photodiodes.h"
 
 /* TOF SENSORS */
 

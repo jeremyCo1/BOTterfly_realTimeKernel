@@ -43,22 +43,22 @@ uint8_t TOF_Init(VL53L0X_Dev_t* device){
 		HAL_GPIO_WritePin(device[i].XSHUT_GPIOx, device[i].XSHUT_GPIO_Pin, GPIO_PIN_RESET);
 		HAL_NVIC_DisableIRQ(device[i].EXTI_IRQn);
 	}
-	HAL_Delay(200);
+	HAL_Delay(100);
 
 	// INITIALIZATION FLOW
 	for(int i=0; i<TOF_nbOfSensor; i++){
 		HAL_GPIO_WritePin(device[i].XSHUT_GPIOx, device[i].XSHUT_GPIO_Pin, GPIO_PIN_SET);
-		HAL_Delay(200);
+		HAL_Delay(100);
 		TOF_InitializationFlow(&device[i], (uint8_t)device[i].EXTI_GPIOx->ODR);
 		TOF_SetDeviceAddr(&device[i], device[i].I2cAddr);
-		HAL_Delay(200);
+		HAL_Delay(100);
 	}
 
 	// Enable the Interruptions
-	for(int i=0; i<TOF_nbOfSensor; i++){
-		HAL_NVIC_EnableIRQ(device[i].EXTI_IRQn);
-	}
-	HAL_Delay(200);
+//	for(int i=0; i<TOF_nbOfSensor; i++){
+//		HAL_NVIC_EnableIRQ(device[i].EXTI_IRQn);
+//	}
+	HAL_Delay(100);
 
 	return 0;
 }
@@ -139,6 +139,8 @@ uint8_t TOF_Settings(VL53L0X_Dev_t* device, uint8_t interruptPin){
 		return 1;
 	}
 
+	//VL53L0X_SetInterMeasurementPeriodMilliSeconds(Dev, InterMeasurementPeriodMilliSeconds)
+
 	return 0;
 }
 
@@ -168,6 +170,17 @@ uint8_t TOF_GetDeviceInfo(VL53L0X_Dev_t* myDevice, VL53L0X_DeviceInfo_t* deviceI
 	printf("Device ID : %s\r\n", deviceInfo->ProductId);
 	printf("ProductRevisionMajor : %d\r\n", deviceInfo->ProductRevisionMajor);
 	printf("ProductRevisionMinor : %d\r\n", deviceInfo->ProductRevisionMinor);
+
+	return 0;
+}
+
+uint8_t TOF_SetDistance_mm(VL53L0X_Dev_t* device){
+	VL53L0X_RangingMeasurementData_t VL53L0X_RangingMeasurementData;
+	uint32_t InterruptMask = 0;
+
+	VL53L0X_GetRangingMeasurementData(device, &VL53L0X_RangingMeasurementData); // ~ 460us
+	device->rangeMillimeter = VL53L0X_RangingMeasurementData.RangeMilliMeter; // ~ 0.25us
+	VL53L0X_ClearInterruptMask(device, InterruptMask); // ~ 295us
 
 	return 0;
 }

@@ -1,0 +1,11 @@
+tof_sensor.c:10:9:TOF_Init_SetI2C	24	static
+tof_sensor.c:17:9:TOF_Init_SetGPIOs	24	static
+tof_sensor.c:27:9:TOF_Init_SetEXTI	16	static
+tof_sensor.c:33:9:TOF_Init	32	static
+tof_sensor.c:66:9:TOF_InitializationFlow	16	static
+tof_sensor.c:84:9:TOF_Initialization	24	static
+tof_sensor.c:108:9:TOF_Calibration	24	static
+tof_sensor.c:126:9:TOF_Settings	32	static
+tof_sensor.c:147:9:TOF_SetDeviceAddr	24	static
+tof_sensor.c:159:9:TOF_GetDeviceInfo	24	static
+tof_sensor.c:177:9:TOF_SetDistance_mm	48	static

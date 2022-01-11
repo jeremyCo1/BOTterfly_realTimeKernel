@@ -1,0 +1,5 @@
+photodiodes.c:42:9:Ph_GetValues	16	static
+photodiodes.c:50:9:Ph_Traitement	16	static
+photodiodes.c:62:5:Ph_GetPhMaxValue	32	static
+photodiodes.c:80:5:Ph_GetBestAngle	40	static
+photodiodes.c:181:5:Ph_GetPercentGood	24	static
