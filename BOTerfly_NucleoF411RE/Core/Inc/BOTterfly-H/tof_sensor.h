@@ -18,6 +18,10 @@
 
 #define TOF_nbOfSensor 3
 
+#define TOF_Angle_L -40
+#define TOF_Angle_R 40
+#define TOF_Angle_F 0
+
 // Example at the end of this file
 
 /* -------------- STRUCTURE -------------- */

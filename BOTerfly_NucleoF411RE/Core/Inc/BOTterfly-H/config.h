@@ -11,6 +11,7 @@
 #include "tof_sensor.h"
 #include "rgb_sensor.h"
 #include "photodiodes.h"
+#include "direction.h"
 
 /* TOF SENSORS */
 

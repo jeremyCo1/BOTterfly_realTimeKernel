@@ -29,14 +29,16 @@
 
 uint8_t Ph_Init()
 {
-	Ph_GetAverageN(Ph_Data, N_NOISE);
+	//Ph_GetAverageN(Ph_Data, N_NOISE);
+	Ph_GetMeasure(Ph_Data);
+	Ph_GetMeasure(Ph_Data);
 	Ph_Angle = 0;
 	Ph_Norma = 0;
-
 	for (int i = 0 ; i < 4 ; i++)
 	{
 		Ph_DataNoise[i] = Ph_Data[i];
 	}
+	printf("INITFIN PH_DataNoise : %04lu, %04lu, %04lu, %04lu\r\n", Ph_DataNoise[0], Ph_DataNoise[1], Ph_DataNoise[2], Ph_DataNoise[3]);
 	return 0;
 }
 
@@ -61,12 +63,12 @@ uint8_t Ph_GetValues(uint32_t value[])
 	HAL_ADC_Start_DMA(&hadc1, Ph_DataDMA, 4);// A APPELLER POUR CHAQUE MESURE
 	for (int i = 0 ; i < 4 ; i++)
 	{
-		Ph_Data[i] = Ph_DataDMA[i];
+		value[i] = Ph_DataDMA[i];
 	}
 	// Inversion valeurs 0 et 3 :
-	uint32_t Ph_Datatempo = Ph_Data[0];
-	Ph_Data[0] = Ph_Data[3];
-	Ph_Data[3] = Ph_Datatempo;
+	uint32_t Ph_Datatempo = value[0];
+	value[0] = value[3];
+	value[3] = Ph_Datatempo;
 
 	HAL_ADC_Stop_DMA(&hadc1);
 	//return uiAnalogData;
@@ -176,6 +178,8 @@ int Ph_GetBestAngle(uint32_t value[])
 	{
 		angle = Ph_GetBestAngleAncien(value);
 	}
+
+	angle = 40 * angle / 100;
 
 	Ph_Angle = angle;
 	return angle;
@@ -307,6 +311,7 @@ int Ph_GetNorma(uint32_t value[])
 			max = i;
 		}
 	}
+	Ph_Max_Tr = Ph_DataTemp[max];
 	Ph_Norma = (uint32_t)(4791.6*exp(-0.001*value[max]));
 	return Ph_Norma;
 }

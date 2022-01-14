@@ -36,6 +36,7 @@
 uint32_t Ph_DataDMA[4];
 uint32_t Ph_Data[4];
 uint32_t Ph_DataNoise[4];
+uint32_t Ph_Max_Tr;
 
 int32_t Ph_Angle; // Compris entre -100 et 100 --> -100 = Ph_Gauche, 0 = Ph_Milieu, 100 = PhDroite.
 uint32_t Ph_Norma; // Comprise entre 0 et 100, plus elle est élevée, plus le robot est loin de la source de lumière, et inversement.

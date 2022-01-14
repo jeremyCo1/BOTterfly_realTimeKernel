@@ -62,7 +62,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  C:/Users/jerem/STM32CubeIDE/workspace_1.7.0/BOTerfly_NucleoF411RE/Drivers/VL53L0X_API/platform/inc/vl53l0x_platform_log.h \
  C:/Users/jerem/STM32CubeIDE/workspace_1.7.0/BOTerfly_NucleoF411RE/Drivers/VL53L0X_API/core/inc/vl53l0x_device.h \
  ../Core/Inc/BOTterfly-H/rgb_sensor.h \
- ../Core/Inc/BOTterfly-H/photodiodes.h
+ ../Core/Inc/BOTterfly-H/photodiodes.h \
+ ../Core/Inc/BOTterfly-H/direction.h
 
 ../Core/Inc/main.h:
 
@@ -205,3 +206,5 @@ C:/Users/jerem/STM32CubeIDE/workspace_1.7.0/BOTerfly_NucleoF411RE/Drivers/VL53L0
 ../Core/Inc/BOTterfly-H/rgb_sensor.h:
 
 ../Core/Inc/BOTterfly-H/photodiodes.h:
+
+../Core/Inc/BOTterfly-H/direction.h:

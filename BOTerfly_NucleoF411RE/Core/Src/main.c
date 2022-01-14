@@ -96,6 +96,9 @@ void MX_FREERTOS_Init(void);
 /*
  * Gère la commande des moteurs en fonction des données des capteurs
  */
+int count_TOF0 = 0;
+int count_task_TOF = 0;
+
 void vTaskSync(void* p)
 {
 	int i =0;
@@ -107,28 +110,8 @@ void vTaskSync(void* p)
 	printf("Start ! \r\n");
 
 	while(1){
-//
-//		printf("\r\n ----------------------- TOF SENSORS ----------------------- \r\n");
-//		printf("Tof 0 - DISTANCE = %d mm\r\n",TOF_Sensor[0].rangeMillimeter);
-//		printf("Tof 1 - DISTANCE = %d mm\r\n",TOF_Sensor[1].rangeMillimeter);
-//		printf("Tof 2 - DISTANCE = %d mm\r\n",TOF_Sensor[2].rangeMillimeter);
-//
-//
-//		printf("\r\n ----------------------- RGB SENSOR ----------------------- \r\n");
-//		if(RGB_Sensor.isFloorRed){
-//			printf("The floor is red\r\n");
-//		}else{
-//			printf("The floor is not red\r\n");
-//		}
-
-		//		printf("Taille restante à la création de la tâche : %lu \r\n", uxHighWaterMark_RGB_1);
-		//		printf("Taille restante à la fin de la tâche : %lu \r\n", uxHighWaterMark_RGB_2);
-
-		//printf("\r\n ----------------------- PHOTODIODE ----------------------- \r\n");
-		//Ph_Print(0);
-
-		printf("Tof0 = %d mm  Tof1 = %d mm  Tof2 = %d mm\r\n",TOF_Sensor[0].rangeMillimeter,TOF_Sensor[1].rangeMillimeter,TOF_Sensor[2].rangeMillimeter);
-
+		//printf("TOF : %04d %04d %04d PH : %04ld %04ld %04ld NOISE : %04ld %04ld %04ld NORME : %04lu ANGLE : %03ld RED : %d X : %05d Y : %05d MOY : %04ld\r\n",TOF_Sensor[0].rangeMillimeter,TOF_Sensor[1].rangeMillimeter,TOF_Sensor[2].rangeMillimeter, Ph_Data[0], Ph_Data[1], Ph_Data[2], Ph_DataNoise[0], Ph_DataNoise[1], Ph_DataNoise[2], Ph_Norma, Ph_Angle, Red, X, Y, Ph_Max_Tr);
+		printf("TOF : %04d %04d %04d  ||  count_TOF_0 %04d count_Task %04d \r\n",TOF_Sensor[0].rangeMillimeter,TOF_Sensor[1].rangeMillimeter,TOF_Sensor[2].rangeMillimeter,count_TOF0, count_task_TOF);
 
 		if(i%20 == 0){
 			xSemaphoreGive(semBinary_CMD);
@@ -152,25 +135,6 @@ void vTaskControl(void * p)
 	while(1){
 		xSemaphoreTake(semBinary_CMD,portMAX_DELAY);
 
-		//printf("vTaskCMD \r\n");
-
-		//		printf("\r\n ----------------------- TOF SENSORS ----------------------- \r\n");
-		//		printf("Tof 0 - DISTANCE = %d mm\r\n",TOF_Sensor[0].rangeMillimeter);
-		//		printf("Tof 1 - DISTANCE = %d mm\r\n",TOF_Sensor[1].rangeMillimeter);
-		//		printf("Tof 2 - DISTANCE = %d mm\r\n",TOF_Sensor[2].rangeMillimeter);
-		//		printf("Taille restante à la création de la tâche : %lu \r\n", uxHighWaterMark_TOF_1);
-		//		printf("Taille restante à la fin de la tâche : %lu \r\n", uxHighWaterMark_TOF_2);
-
-		//		printf("\r\n ----------------------- RGB SENSOR ----------------------- \r\n");
-		//		if(RGB_Sensor.isFloorRed){
-		//			printf("The floor is red\r\n");
-		//		}else{
-		//			printf("The floor is not red\r\n");
-		//		}
-		//		printf("Frequence filtre rouge : %u Hz \r\n",RGB_Sensor.red);
-		//		printf("Frequence filtre vert  : %u Hz \r\n",RGB_Sensor.green);
-		//		printf("Frequence filtre bleu  : %u Hz \r\n",RGB_Sensor.blue);
-
 		//		printf("Taille restante à la création de la tâche : %lu \r\n", uxHighWaterMark_RGB_1);
 		//		printf("Taille restante à la fin de la tâche : %lu \r\n", uxHighWaterMark_RGB_2);
 
@@ -182,6 +146,41 @@ void vTaskControl(void * p)
 		//		printf("timeDiff : %lf ms \r\n",(double)timeDiff/1000000.0);
 		//		printf("\r\n");
 		//xSemaphoreGive(semBinary_Ph);
+
+		// Calcul direction :
+		Ph_X = (int)(Ph_Norma * cos(Ph_Angle));
+		Ph_Y = (int)(Ph_Norma * sin(Ph_Angle));
+
+		int X0 = 0;
+		int X1 = 0;
+		int X2 = 0;
+		int Y0 = 0;
+		int Y1 = 0;
+		int Y2 = 0;
+		if (TOF_Sensor[0].rangeMillimeter < D_TOF)
+		{
+
+		}
+		if (TOF_Sensor[0].rangeMillimeter < D_TOF)
+		{
+
+		}
+		if (TOF_Sensor[0].rangeMillimeter < D_TOF)
+		{
+
+		}
+
+		X = Ph_X + X0 + X1 + X2;
+		Y = Ph_Y + Y0 + Y1 + Y2;
+		// Commande moteur :
+		Red = 0;
+		if (RGB_Sensor.isFloorRed != 0)
+		{
+			// RED !
+			Red = 1;
+		}
+
+
 	}
 }
 
@@ -200,22 +199,23 @@ void vTaskToF(void * p)
 	for(int i=0; i<TOF_nbOfSensor; i++){
 		HAL_NVIC_EnableIRQ(TOF_Sensor[i].EXTI_IRQn);
 	}
-
+	//int j =0;
 	while(1){
 		xSemaphoreTake(semBinary_TOF,portMAX_DELAY);
 
-		//printf("vTaskTOF \r\n");
-
+count_task_TOF = count_TOF0;
 		// Durée max observée : 2.319950ms
 		// Durée min observée : 1.225000us
-//		for(int i=0; i<TOF_nbOfSensor; i++){
-//			if(TOF_Sensor[i].it.flag){
-//				xSemaphoreTake(semMutex,portMAX_DELAY);
-//				TOF_SetDistance_mm(&TOF_Sensor[i]);
-//				TOF_Sensor[i].it.flag = 0;
-//				xSemaphoreGive(semMutex);
-//			}
-//		}
+		for(int i=0; i<TOF_nbOfSensor; i++){
+			if(TOF_Sensor[i].it.flag){
+				xSemaphoreTake(semMutex,portMAX_DELAY);
+				TOF_SetDistance_mm(&TOF_Sensor[i]);
+				TOF_Sensor[i].it.flag = 0;
+				xSemaphoreGive(semMutex);
+			}
+			//TOF_Sensor[i].rangeMillimeter = j;
+			//j++;
+		}
 		uxHighWaterMark_TOF_2 = uxTaskGetStackHighWaterMark(NULL);
 	}
 }
@@ -227,10 +227,14 @@ void vTaskPhotodiodes(void * p)
 	// Calcule l'emplacement le plus lumineux
 	// Remplie une variable avec un angle compris entre -100 et 100 pour orienter le robot :
 	// Orientation
+	//vTaskDelay(5);
+	//Ph_Init();
+
 	while(1){
 		xSemaphoreTake(semBinary_Ph,portMAX_DELAY);
 
 		Ph_GetMeasure(Ph_Data);
+		//printf("--PH_DataNoise : %04lu, %04lu, %04lu\r\n", Ph_Data[0], Ph_Data[1], Ph_Data[2]);
 		Ph_GetBestAngle(Ph_Data);
 		Ph_GetNorma(Ph_Data);
 
@@ -250,7 +254,7 @@ void vTaskCouleur(void * p)
 	uxHighWaterMark_RGB_1 = uxTaskGetStackHighWaterMark(NULL);
 	HAL_TIM_IC_Start_IT(RGB_Sensor.Timer_Handle, RGB_Sensor.Timer_Channel);
 
-	HAL_GPIO_WritePin(RGB_Sensor.LED_GPIOx, RGB_Sensor.LED_GPIO_Pin, RESET);
+	//HAL_GPIO_WritePin(RGB_Sensor.LED_GPIOx, RGB_Sensor.LED_GPIO_Pin, RESET);
 
 	while(1){
 		xSemaphoreTake(semBinary_RGB,portMAX_DELAY);
@@ -334,9 +338,9 @@ int main(void)
 	RGB_Init_SetColorFilterGPIOs(&RGB_Sensor, RGB_S2_GPIO_Port, RGB_S2_Pin, RGB_S3_GPIO_Port, RGB_S3_Pin);
 
 	RGB_Init(&RGB_Sensor);
-	//
 
 	Ph_Init();
+
 
 	// Init Motor
 	// Init Ph
@@ -447,7 +451,6 @@ uint16_t icVal01 = 0;
 
 uint8_t countTime = 0;
 
-
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
 	// Durée de l'IT : 1.550000us ou 1.325000us
@@ -474,20 +477,20 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	// Durée de l'IT : 0.500000us
 	if(GPIO_Pin == TOF_Sensor[0].EXTI_GPIO_Pin){
+		count_TOF0++;
 		// IT toutes les 33ms
 		TOF_Sensor[0].it.flag = 1;
-		TOF_SetDistance_mm(&TOF_Sensor[0]);
-
+		//TOF_SetDistance_mm(&TOF_Sensor[0]);
 	}
 	else if(GPIO_Pin == TOF_Sensor[1].EXTI_GPIO_Pin){
 		// IT toutes les 33ms
 		TOF_Sensor[1].it.flag = 1;
-		TOF_SetDistance_mm(&TOF_Sensor[1]);
+		//TOF_SetDistance_mm(&TOF_Sensor[1]);
 	}
 	else if(GPIO_Pin == TOF_Sensor[2].EXTI_GPIO_Pin){
 		// IT toutes les 33ms
 		TOF_Sensor[2].it.flag = 1;
-		TOF_SetDistance_mm(&TOF_Sensor[2]);
+		//TOF_SetDistance_mm(&TOF_Sensor[2]);
 	}
 
 	else if(GPIO_Pin == BTN_Pin){

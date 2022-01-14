@@ -176,11 +176,14 @@ uint8_t TOF_GetDeviceInfo(VL53L0X_Dev_t* myDevice, VL53L0X_DeviceInfo_t* deviceI
 
 uint8_t TOF_SetDistance_mm(VL53L0X_Dev_t* device){
 	VL53L0X_RangingMeasurementData_t VL53L0X_RangingMeasurementData;
-	uint32_t InterruptMask = 0;
+	//uint32_t InterruptMask = 0;
 
 	VL53L0X_GetRangingMeasurementData(device, &VL53L0X_RangingMeasurementData); // ~ 460us
 	device->rangeMillimeter = VL53L0X_RangingMeasurementData.RangeMilliMeter; // ~ 0.25us
-	VL53L0X_ClearInterruptMask(device, InterruptMask); // ~ 295us
+	VL53L0X_ClearInterruptMask(device, VL53L0X_REG_SYSTEM_INTERRUPT_GPIO_NEW_SAMPLE_READY); // ~ 295us
+	//VL53L0X_REG_SYSTEM_INTERRUPT_CLEAR
+	//VL53L0X_REG_SYSTEM_INTERRUPT_GPIO_NEW_SAMPLE_READY
+	//VL53L0X_REG_SYSTEM_INTERRUPT_GPIO_OUT_OF_WINDOW
 
 	return 0;
 }
